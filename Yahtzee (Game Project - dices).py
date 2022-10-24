@@ -112,6 +112,38 @@ def total_score(player):
         ts += score[player][key]
     return ts
     
+def print_card(player):
+    print(f"PLAYER's {player + 1} CARD")
+    if score[player]["ones"] == -1:
+        print("ones: " )
+    else:
+        print(f"ones: {score[player]['ones']}")
+    
+    if score[player]["twos"] == -1:
+        print("twos: " )
+    else:
+        print(f"twos: {score[player]['twos']}")
+    
+    if score[player]["threes"] == -1:
+        print("threes: " )
+    else:
+        print(f"threes: {score[player]['threes']}")
+        
+    if score[player]["fours"] == -1:
+        print("fours: " )
+    else:
+        print(f"fours: {score[player]['fours']}")
+        
+    if score[player]["fives"] == -1:
+        print("fives: " )
+    else:
+        print(f"fives: {score[player]['fives']}")
+        
+    if score[player]["sixes"] == -1:
+        print("sixes: " )
+    else:
+        print(f"sixes: {score[player]['sixes']}\n")
+    
 #main
 print("~"*20 + " Let's play Yahtzee !! " + "~"*20)
 for round in range(1,13):
@@ -134,15 +166,18 @@ for round in range(1,13):
         t_s_1 = total_score(0)
         t_s_2 = total_score(1)
         print("\n" + "="*25 + " Final Score " + "="*25)
-        print("Player's 1 Total Score = " + str(t_s_1) + "\n" + str(score[0]) )
-        print("Player's 2 Total Score = " + str(t_s_2) + "\n" + str(score[1]) )
+        print_card(0)
+        print("Player's 1 Total Score = " + str(t_s_1) + "\n")
+        print_card(1)
+        print("Player's 2 Total Score = " + str(t_s_2) + "\n")
         if t_s_1 > t_s_2:
-            print("\nPlayer 1 WINS !")
-            
+            print("Player 1 WINS !")
         elif t_s_1 < t_s_2:
-            print("\nPlayer 2 WINS !")
+            print("Player 2 WINS !")
         else:
-            print("\nDRAW !!!")
+            print("DRAW !!!")
     else:
         print("\n" + "="*25 + " Score " + "="*25)
-        print("Player's 1:\n" + str(score[0]) + "\n" + "Player's 2:\n" + str(score[1]) )      
+        print_card(0)
+        print("")
+        print_card(1)      
