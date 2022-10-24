@@ -5,23 +5,18 @@ from datetime import datetime
 seed(datetime.now())
 
 #globals
-score = [
-    {
-        "ones": -1,
-        "twos": -1,
-        "threes": -1,
-        "fours": -1,
-        "fives": -1,
-        "sixes": -1
-    },
-    {   "ones": -1,
-        "twos": -1,
-        "threes": -1,
-        "fours": -1,
-        "fives": -1,
-        "sixes": -1
-    }
-]
+score = [{  "ones": -1,
+            "twos": -1,
+            "threes": -1,
+            "fours": -1,
+            "fives": -1,
+            "sixes": -1 },
+        {   "ones": -1,
+            "twos": -1,
+            "threes": -1,
+            "fours": -1,
+            "fives": -1,
+            "sixes": -1 }]
 
 dices = [1,2,3,4,5,6]
 Roll = []
@@ -44,7 +39,7 @@ def player_turn():
     Roll = []
     Roll = roll_dices(Roll)
     cnt = 1
-    print("="*15 + "Roll " + str(cnt) + "="*15)
+    print("\n" + "="*15 + " Roll " + str(cnt) + " " + "="*15)
     print(f"Roll: {Roll}")
     print(f"Choosen dices: {choos_dices}")
     choice = input("Choose 1 dice to keep or pass: ")
@@ -53,13 +48,16 @@ def player_turn():
             choice = int(choice)
             choos_dices.append(choice)
             Roll.remove(choice)
-            print("="*15 + "Roll " + str(cnt) + "="*15)
+            print("="*15 + " Roll " + str(cnt) + " " + "="*15)
             print(f"Roll: {Roll}")
             print(f"Choosen dices: {choos_dices}")
             choice = input("Choose 1 dice to keep or pass: ")
+        if len(choos_dices) == 5:
+            choos_dices.sort()
+            break
         Roll = roll_dices(Roll)
         cnt += 1
-        print("="*15 + "Roll " + str(cnt) + "="*15)
+        print("="*15 + " Roll " + str(cnt) + " " + "="*15)
         print(f"Roll: {Roll}")
         print(f"Choosen dices: {choos_dices}")
         if cnt == 3:
@@ -83,16 +81,20 @@ def translate_name(s):
         return 5
     elif s=="sixes":
         return 6
-        
+
 def player_picks(player, dice):
     print("You can store your dices as: ", end="")
     picks = []
     for key, value in score[player].items():
         if value == -1:
-            print(key, end=", ")
-            picks += [key]
+            if key == "sixes": 
+                print(key, end=". ")
+                picks += [key]
+            else:
+                print(key, end=", ")
+                picks += [key]
     while True:
-        choice = input("\npick a choice: ")
+        choice = input("\nPick a choice: ")
         if choice not in picks:
             print("Wrong choice!")
             continue
@@ -101,12 +103,46 @@ def player_picks(player, dice):
             score[player][choice] = dice.count(key_val) * key_val
             return
 
+def total_score(player):
+    ts = 0
+    for key, value in score[player].items():
+        if score[player][key] == -1:
+            score[player][key] = 0
+    for key, value in score[player].items():
+        ts += score[player][key]
+    return ts
+    
+#main
+print("~"*20 + " Let's play Yahtzee !! " + "~"*20)
+for round in range(1,13):
+    if round%2 == 1:
+        player = 0
+        player_p = 1
+    else:
+        player = 1
+        player_p = 2
+    print("\n" + "~"*25 + " Round " + str(round) + ": Player's " + str(player_p) + " turn ! " + "~"*25)
+
 #player's round
-dice = player_turn()
+    dice = player_turn()
 
 #player's final choices
-player_picks(0, dice)
-print("\n" + "="*25 + " Player's Score " + "="*25)
-print(score)
-
-#main game
+    player_picks(player, dice)
+    
+#print scores + winner
+    if round==12:
+        t_s_1 = total_score(0)
+        t_s_2 = total_score(1)
+        print("\n" + "="*25 + " Final Score " + "="*25)
+        print("Player's 1 Total Score = " + str(t_s_1) + "\n" + str(score[0]) )
+        print("Player's 2 Total Score = " + str(t_s_2) + "\n" + str(score[1]) )
+        if t_s_1 > t_s_2:
+            print("\nPlayer 1 WINS !")
+            
+        elif t_s_1 < t_s_2:
+            print("\nPlayer 2 WINS !")
+        else:
+            print("\nDRAW !!!")
+    else:
+        print("\n" + "="*25 + " Score " + "="*25)
+        print("Player's 1:\n" + str(score[0]) + "\n" + "Player's 2:\n" + str(score[1]) )      
