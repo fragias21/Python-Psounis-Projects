@@ -1,32 +1,24 @@
-pupils = [
-    {
-        "id": 1001,
-        "name": "John",
-        "surname": "Doe",
-        "fathers_name": "Michael",
-        "age": 15,
-        "class": 1,
-        "id_number": "AN123949"
-    },
-    {   
-        "id": 1002,
-        "name": "Mary",
-        "surname": "Poppins",
-        "fathers_name": "Chris",
-        "age": 10,
-        "class": 3,
-        "id_number": "AE123981"
-    },
-    {
-        "id": 1003,
-        "name": "John",
-        "surname": "Wick",
-        "fathers_name": "Chiwetel",
-        "age": 7,
-        "class": 6,
-        "id_number": "AN456589"
-    }
-        ]
+pupils = [{ "id": 1001,
+            "name": "John",
+            "surname": "Doe",
+            "fathers_name": "Michael",
+            "age": 15,
+            "class": 1,
+            "id_number": "AN123949"},
+          { "id": 1002,
+            "name": "Mary",
+            "surname": "Poppins",
+            "fathers_name": "Chris",
+            "age": 10,
+            "class": 3,
+            "id_number": "AE123981"},
+          { "id": 1003,
+            "name": "John",
+            "surname": "Wick",
+            "fathers_name": "Chiwetel",
+            "age": 7,
+            "class": 6,
+            "id_number": "AN456589"}]
 
 def main():
     print("\n=================")
@@ -48,14 +40,58 @@ def menu_2():
     print("4 - Return to Main Menu")
     x = int(input("Pick one: "))
     return x
-    
+
+def menu_3():
+    print("\n=================")
+    print("     UPDATE ")
+    print("1 - Update Pupil (search by ID)")
+    print("2 - Update Pupil (search by surname)")
+    print("3 - Return to Main Menu")
+    x = int(input("Pick one: "))
+    return x
+
+def menu_4():
+    print("\n=================")
+    print("     DELETE ")
+    print("1 - Delete Pupil (by ID)")
+    print("2 - Delete Pupil (by surname)")
+    print("3 - Return to Main Menu")
+    x = int(input("Pick one: "))
+    return x
+
+def pupil_update(pupil):
+    print_pupil(pupil)
+    print("=" * 15)
+    print("1- Name")
+    print("2- Surname")
+    print("3- Father's name")
+    print("4- Age")
+    print("5- Class")
+    print("6- ID number")
+    print("=" * 15)
+    update_choice = int(input(print("Pick one to update: ")))
+    if update_choice == 1:
+        pupil["name"] = input("Give new name: ")
+    elif update_choice == 2:
+        pupil["surname"] = input("Give new surname: ")
+    elif update_choice == 3:
+        pupil["fathers_name"] = input("Give new father's name: ")
+    elif update_choice == 4:
+        pupil["age"] = input("Give new age: ")
+    elif update_choice == 5:
+        pupil["class"] = input("Give new class: ")
+    elif update_choice == 6:
+        pupil["id_number"] = input("Give new ID number: ")
+    print("=" * 15)
+    print_pupil(pupil)
+    print("Pupil UPDATED !")
+   
 def create_pupil(pupils):
     print("\n      NEW PUPIL")
     print("=======================")
     name = input("Give name: ")
     surname = input("Give surname: ")
     fathers_name = input("Give father's name: ")
-    
     for p in pupils:
         if name==p["name"] and surname==p["surname"] and fathers_name==p["fathers_name"]:
             print("This pupil already exist.")
@@ -71,7 +107,6 @@ def create_pupil(pupils):
             else: 
                 id_number = 0
             break
-    
     pupil = {}
     pupil["name"]=name
     pupil["surname"]=surname
@@ -79,12 +114,10 @@ def create_pupil(pupils):
     pupil["age"]=age
     pupil["class"]=pupil_class
     pupil["id_number"]=id_number
-        
     ids = []
     for p in pupils:
         ids.append(p["id"])
     pupil["id"] = max(ids) + 1
-        
     pupils.append(pupil)
     return pupil
 
@@ -114,6 +147,13 @@ def search_pupil_by_id(pupil_id):
             return pupil
     return None    
 
+def search_pupil_by_surname(surname):
+    match_pupils = []
+    for pupil in pupils:
+        if surname == pupil["surname"]:
+            match_pupils.append(pupil)
+    return match_pupils
+
 def print_pupils_details():
     for pupil in pupils:
         print("=" * 15)
@@ -123,6 +163,12 @@ def print_pupils_names():
     for pupil in pupils:
         print(f"{pupil['name']} {pupil['fathers_name'][0]}. {pupil['surname']}")
 
+def delete_pupil_by_id(pupil):
+    if pupil in pupils:
+        pupils.remove(pupil)
+        print("\nDelete successful !")
+        return
+    
 while True:
     choice = main()
     while choice not in range (1,6):
@@ -150,9 +196,72 @@ while True:
         elif choice_2==4:
             continue
     elif choice==3:
-        pass
+        choice_3 = menu_3
+        while choice_3 not in range (1,4):
+            choice_3 = menu_3()
+        if choice_3 == 1:
+            pupil_id = int(input("Give pupil's ID: "))
+            pupil = search_pupil_by_id(pupil_id)
+            if pupil is None:
+                print("ERROR ! There is no pupil with this id!")
+                continue
+        elif choice_3==2:
+            surname = input("Give surname: ")
+            matching_pupils = search_pupil_by_surname(surname)
+            if matching_pupils == []:
+                print("No matching pupils with this surname!")
+                continue
+            elif len(matching_pupils) == 1:
+                pupil = matching_pupils[0]
+            else:
+                for p in matching_pupils:
+                    print_pupil(p)
+                    print(f"ID = {p['id']}")
+                    print("-" * 15)
+                pupil_id = int(input("Give ID: "))  
+                pupil = search_pupil_by_id(pupil_id)
+                if pupil is None:
+                    print("ERROR ! There is no pupil with this id!")
+                    continue
+                else:
+                    pupil_update(pupil)
+        elif choice_3==3:
+            continue
     elif choice==4:
-        pass
+        choice_4 = menu_4
+        while choice_4 not in range (1,4):
+            choice_4 = menu_4()
+        if choice_4 == 1:
+            pupil_id = int(input("Give pupil's ID: "))
+            pupil = search_pupil_by_id(pupil_id)
+            if pupil is None:
+                print("ERROR ! There is no pupil with this id!")
+                continue
+            else:
+                delete_pupil_by_id(pupil)
+        elif choice_4==2:
+            surname = input("Give surname: ")
+            matching_pupils = search_pupil_by_surname(surname)
+            if matching_pupils == []:
+                print("No matching pupils with this surname!")
+                continue
+            elif len(matching_pupils) == 1:
+                pupil = matching_pupils[0]
+                delete_pupil_by_id(pupil)
+            else:
+                for p in matching_pupils:
+                    print_pupil(p)
+                    print(f"ID = {p['id']}")
+                    print("-" * 15)
+                pupil_id = int(input("Give ID: "))  
+                pupil = search_pupil_by_id(pupil_id)
+                if pupil is None:
+                    print("ERROR ! There is no pupil with this id!")
+                    continue
+                else:
+                    delete_pupil_by_id(pupil)
+        elif choice_4==3:
+            continue
     elif choice==5:
         print("\nBye bye!")
         break
